@@ -1,6 +1,5 @@
 import {Text, View, TouchableOpacity, Image, FlatList, TextInput} from 'react-native'
 import {Component} from 'react'
-import Contador from '../components/Contador'
 import { StyleSheet } from 'react-native'
 import { auth } from '../firebase/config'
 

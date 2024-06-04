@@ -6,6 +6,9 @@ import { Octicons } from '@expo/vector-icons';
 import Login from '../screens/Login'
 
 import miPerfil from '../screens/miPerfil'
+import Feed from '../screens/Feed';
+import NewPost from '../screens/NewPost';
+
 
 const Tab = createBottomTabNavigator()
 

@@ -8,7 +8,7 @@ import {db, auth} from '../firebase/config'
 import { StyleSheet } from 'react-native'
 
 import Login from '../screens/Login'
-import Post from '../components/Post'
+import Post from '../Component/Post'
 
 
 export default class Feed extends Component {

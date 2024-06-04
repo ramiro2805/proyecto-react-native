@@ -6,7 +6,7 @@ import Register from '../screens/Register'
 import {db, auth} from '../firebase/config'
 import Login from '../screens/Login'
 import { StyleSheet } from 'react-native'
-import Camara from '../components/Camara'
+import MyCamara from '../Component/MyCamara'
 
 
 export default class NewPost extends Component {
@@ -41,7 +41,7 @@ export default class NewPost extends Component {
                 {this.state.imgPostUrl === '' 
                 
                 ? 
-                <Camara actualizar={() => this.actualizarImgUrl(url)}/> 
+                <MyCamara actualizar={() => this.actualizarImgUrl(url)}/> 
                 
                 :
                 <View> 

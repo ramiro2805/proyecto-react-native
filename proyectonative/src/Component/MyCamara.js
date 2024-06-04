@@ -53,7 +53,7 @@ class MyCamera extends Component {
                     .then(() => {
                         ref.getDownloadURL()
                             .then(url => {
-                                this.props.onImageUpload(url)
+                                this.props.actualizar(url)
                             }
                             )
                     })
@@ -62,12 +62,13 @@ class MyCamera extends Component {
     }
 
     render() {
+        console.log(Camera.Constants);
         return (
             <>
                 {this.state.permission ?
                     this.state.showCamera ?
                         <View style={styles.container} >
-                            <Camera style={styles.camera} type={Camera.Constants.Type.front} ref={metodosCamara => this.metodosCamara = metodosCamara} />
+                            <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={metodosCamara => this.metodosCamara = metodosCamara} />
                             <View style={styles.containerButton}>
                                 <TouchableOpacity
                                     style={styles.button}
@@ -161,3 +162,16 @@ const styles = StyleSheet.create({
 });
 
 export default MyCamera;
+Contraer
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,7 +1,7 @@
 import {Text, View, TouchableOpacity, Image, FlatList, TextInput} from 'react-native'
 import {Component} from 'react'
 import { StyleSheet } from 'react-native'
-import { auth } from '../firebase/config'
+import { db, auth } from '../firebase/config'
 
 
 
@@ -13,7 +13,8 @@ class Register extends Component {
             email : "",
             pass: '',
             user: '',
-            error : ''
+            error : '',
+            minibio: ''
         }
     }
    componentDidMount() {
@@ -23,7 +24,7 @@ class Register extends Component {
     clickeame () {
         console.log("me clickearon")
     }
-    OnSubmit (name,email,password) {
+    OnSubmit (name,email,password,text) {
         console.log(this.state.user)
         console.log(this.state.pass)
         console.log(this.state.email)
@@ -44,7 +45,14 @@ class Register extends Component {
         .then((user) => 
         {if(user) {
             console.log('usuario registrado')
-            // aca tengo que crear la coleccion de usuarios
+            db.collection('users').add({
+                mail: email,
+                pass: password,
+                nombre: name,
+                minibio: text
+            })
+            .then( this.props.navigation.navigate('login'))
+            .catch((e) => console.log(e))
         }}
     
     )
@@ -83,9 +91,18 @@ class Register extends Component {
                     onChangeText={(text) => this.setState({pass : text, error : ''})}
                     value= {this.state.pass}
                     secureTextEntry= {true}
-                    >
-                    </TextInput>
-                    <TouchableOpacity style={styles.boton} onPress={() => this.OnSubmit(this.state.user,this.state.email,this.state.pass)}>
+                    />
+                    <TextInput
+                    style = {styles.input}
+                    keyboardType='email-adress'
+                    placeholder='minibio'
+                    onChangeText = {(text)=> this.setState({
+                        minibio:text
+                    })}
+                    value = {this.state.minibio}
+                    />
+                    
+                    <TouchableOpacity style={styles.boton} onPress={() => this.OnSubmit(this.state.user,this.state.email,this.state.pass,this.state.minibio)}>
                         <Text>Registrarse</Text>
                     </TouchableOpacity>
                     {this.state.error !== '' ?

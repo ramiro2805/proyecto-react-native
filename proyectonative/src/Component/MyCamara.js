@@ -13,6 +13,7 @@ class MyCamera extends Component {
             photo: '',
             showCamera: true,
         }
+        this.metodosCamara = null
     }
 
     componentDidMount() {
@@ -162,7 +163,6 @@ const styles = StyleSheet.create({
 });
 
 export default MyCamera;
-Contraer
 
 
 

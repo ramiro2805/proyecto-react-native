@@ -1,4 +1,4 @@
-import {Text, View, TouchableOpacity, Image, FlatList} from 'react-native'
+import {Text, View, TouchableOpacity, Image, FlatList , TextInput} from 'react-native'
 import React, {Component} from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import {NavigationContainer} from '@react-navigation/native'
@@ -26,7 +26,7 @@ export default class NewPost extends Component {
                 descripcion : descripcion,
                 owner: auth.currentUser.email,
                 createdAt : Date.now(),
-                imageUrl:this.actualizarImgUrl() ,
+                imageUrl:this.state.imgPostUrl ,
                 likes: [],
                 comments : []
             })
@@ -41,7 +41,7 @@ export default class NewPost extends Component {
                 {this.state.imgPostUrl === '' 
                 
                 ? 
-                <MyCamara actualizar={() => this.actualizarImgUrl(url)}/> 
+                <MyCamara actualizar={(url) => this.actualizarImgUrl(url)}/> 
                 
                 :
                 <View> 

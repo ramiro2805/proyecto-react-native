@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { Camera } from 'expo-camera';
+//import { Camera } from 'expo-camera';
+import {Camera} from 'expo-camera/legacy'
 import { storage } from "../firebase/config";
 import { auth } from "../firebase/config";
 
@@ -17,9 +18,9 @@ class MyCamera extends Component {
     }
 
     componentDidMount() {
+        console.log('Camera',Camera)
         Camera.requestCameraPermissionsAsync()
             .then((res) => {
-                if (res.granted === true)
                     this.setState({
                         permission: true,
                     })
@@ -146,7 +147,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     camera: {
-        height: 400
+        height: 400,
+        width: 400
     },
     button: {
         flex: 1,

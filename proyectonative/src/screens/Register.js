@@ -138,10 +138,6 @@ const styles = StyleSheet.create({
         flex : 4,
         backgroundColor : 'white'
     }, 
-    imgPerrito: {
-        height : 150,
-        width:'100%'
-    },
     container3 : {
         flex : 1,
         backgroundColor : 'grey'

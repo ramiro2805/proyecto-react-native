@@ -16,7 +16,7 @@ export default class miPerfil extends Component {
         super(props)
         this.state = {
             posteos: [],
-            datosUsuario:{}
+            datosUsuario:null
         }
     }
     componentDidMount(){
@@ -33,11 +33,11 @@ export default class miPerfil extends Component {
                 this.setState({posteos:posts})
             }
         )
-        db.collection('users').where('owner', '==', auth.currentUser.email)
+        db.collection('users').where('mail', '==', auth.currentUser.email)
         .onSnapshot(data => {
-            data.forEach(doc => {
-                const userData = doc.data();
-                console.log(userData);
+            data.forEach(doc => {    
+                console.log(doc.data());
+                this.setState({datosUsuario:doc.data()})
             });
      })
     }
@@ -45,11 +45,15 @@ export default class miPerfil extends Component {
         return(
             <View style={styles.containerPrincipal}>
                 <Text>Mi perfil</Text>
-                <View style={styles.perfil}>
-                        <Text>{auth.currentUser.email}</Text>
-                        <Text>{auth.currentUser.nombre}</Text>
-                        <Text>{auth.currentUser.minibio}</Text>
+                {this.state.datosUsuario ? 
+                    <View style={styles.perfil}>
+                        <Text>{this.state.datosUsuario.mail}</Text>
+                        <Text>{this.state.datosUsuario.nombre}</Text>
+                        <Text>{this.state.datosUsuario.minibio}</Text>
                     </View>
+                 : 
+                    <Text>Cargando información del usuario...</Text>
+                }
                 <FlatList
                 data={this.state.posteos}
                 keyExtractor={(item) => item.id.toString()}

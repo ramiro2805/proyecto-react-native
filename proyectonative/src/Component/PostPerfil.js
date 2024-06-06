@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 import firebase from 'firebase'
 import {db, auth} from '../firebase/config'
 import { AntDesign } from '@expo/vector-icons';
-class Post extends Component {
+class PostPerfil extends Component {
     constructor(props){
         super(props)
         this.state ={
@@ -25,7 +25,6 @@ class Post extends Component {
     render( ){
         return(
             <View style={styles.container}>
-                <Text>{this.props.posteo.data.owner}</Text>
                 <Image style={styles.img} source={ {uri: this.props.posteo.data.imageUrl}}/>
                 <Text>{this.props.posteo.data.descripcion}</Text>
                 
@@ -38,6 +37,14 @@ class Post extends Component {
             </TouchableOpacity>
                 }
                 <Text>Cantidad de likes: {this.state.likes}</Text>
+                {auth.currentUser.email == this.props.posteo.data.owner?
+                <TouchableOpacity
+                onPress={(idPosteo)=>this.props.borrarPosteo(this.props.posteo.id)}
+                >
+                <Text>Borrar Posteo</Text>
+                </TouchableOpacity> :
+                <Text> </Text>
+                }
                 
             </View>
         )
@@ -67,4 +74,4 @@ const styles = StyleSheet.create({
         width:'100%'
     }
   });
-export default Post
+export default PostPerfil

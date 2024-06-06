@@ -1,4 +1,4 @@
-import {Text, View , FlatList} from 'react-native'
+import {Text, View , FlatList, TouchableOpacity} from 'react-native'
 import React, {Component} from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import {NavigationContainer} from '@react-navigation/native'
@@ -8,7 +8,7 @@ import {db, auth} from '../firebase/config'
 import { StyleSheet } from 'react-native'
 
 import Login from '../screens/Login'
-import Post from '../Component/Post'
+import PostPerfil from '../Component/PostPerfil'
 
 
 export default class miPerfil extends Component {
@@ -41,6 +41,15 @@ export default class miPerfil extends Component {
             });
      })
     }
+    logout(){
+        auth.signOut()
+        .then(()=>this.props.navigation.navigate('login'))
+    }
+    borrarPosteo(idPosteo){
+        db.collection('posteos').doc(idPosteo).delete()
+        .then((res)=>console.log(res))
+        .catch(e=>console.log(e))
+      }
     render( ) {
         return(
             <View style={styles.containerPrincipal}>
@@ -50,6 +59,13 @@ export default class miPerfil extends Component {
                         <Text>{this.state.datosUsuario.mail}</Text>
                         <Text>{this.state.datosUsuario.nombre}</Text>
                         <Text>{this.state.datosUsuario.minibio}</Text>
+                        <Text>Cantidad de posteos: {this.state.posteos.length}</Text>
+                        <TouchableOpacity style={styles.button} onPress={()=> this.props.navigation.navigate("EditUser")}>
+                            <Text style={styles.buttonText}>Edit</Text>
+                            </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.logout()}>
+                            <Text>Logout</Text>
+                        </TouchableOpacity>
                     </View>
                  : 
                     <Text>Cargando información del usuario...</Text>
@@ -57,7 +73,7 @@ export default class miPerfil extends Component {
                 <FlatList
                 data={this.state.posteos}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({item}) => <View><Post posteo={item}/></View>}
+                renderItem={({item}) => <View><PostPerfil borrarPosteo={(idPosteo) => this.borrarPosteo(idPosteo)} posteo={item}/></View>}
                 />
 
                 

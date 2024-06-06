@@ -21,9 +21,6 @@ class Register extends Component {
     console.log("Mounteo")
     console.log(this.props)
    }
-    clickeame () {
-        console.log("me clickearon")
-    }
     OnSubmit (name,email,password,text) {
         console.log(this.state.user)
         console.log(this.state.pass)

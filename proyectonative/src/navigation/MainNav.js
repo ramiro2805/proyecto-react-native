@@ -5,6 +5,7 @@ import Register from '../screens/Register'
 const Stack = createNativeStackNavigator()
 import Login from '../screens/Login'
 import TabNav from './TabNav'
+import EditUser from '../screens/EditUser'
 
 export default class MainNav extends Component {
 
@@ -16,6 +17,7 @@ export default class MainNav extends Component {
                     <Stack.Screen name='register' component={Register} options = {{ headerShown: false}}/>
                     <Stack.Screen name='login' component= {Login} options = {{ headerShown: false}}/>
                     <Stack.Screen name='tabnav' component={TabNav}  options={{headerShown : false}}/>
+                    <Stack.Screen name = 'EditUser' component = {EditUser}  />
                 </Stack.Navigator>
             </NavigationContainer>
         )

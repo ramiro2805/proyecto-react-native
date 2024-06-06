@@ -49,7 +49,8 @@ class Register extends Component {
                 mail: email,
                 pass: password,
                 nombre: name,
-                minibio: text
+                minibio: text,
+                createdAt:Date.now()
             })
             .then( this.props.navigation.navigate('login'))
             .catch((e) => console.log(e))

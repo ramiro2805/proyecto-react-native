@@ -38,7 +38,7 @@ export default class Feed extends Component {
                 <FlatList
                 data={this.state.posteos}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({item}) => <View><Post posteo={item}/></View>} 
+                renderItem={({item}) => <View><Post navigation = {this.props.navigation} posteo={item}/></View>} 
                 />
             </View>
         )

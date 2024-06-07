@@ -15,8 +15,10 @@ class Login extends Component {
     }
     componentDidMount() {
         auth.onAuthStateChanged((user) => {
-        if (user) {
+        if (user !== null) {
             console.log("Este es el email logueado ", auth.currentUser.email)
+            this.props.navigation.navigate('tabnav')
+
         }
 
         })

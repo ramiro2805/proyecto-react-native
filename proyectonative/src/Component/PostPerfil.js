@@ -28,7 +28,7 @@ class PostPerfil extends Component {
                 <Image style={styles.img} source={ {uri: this.props.posteo.data.imageUrl}}/>
                 <Text>{this.props.posteo.data.descripcion}</Text>
                 
-                <Text>{this.props.posteo.data.comments}</Text>
+                
                 {this.state.miLike ? <TouchableOpacity onPress={() => this.Deslikear()}>
                 <AntDesign name="heart" size={24} color="black" />
                 </TouchableOpacity>:

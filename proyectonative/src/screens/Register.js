@@ -2,8 +2,8 @@ import {Text, View, TouchableOpacity, Image, FlatList, TextInput} from 'react-na
 import {Component} from 'react'
 import { StyleSheet } from 'react-native'
 import { db, auth } from '../firebase/config'
-
-
+import * as ImagePicker from 'expo-image-picker'
+import { storage } from "../firebase/config";
 
 class Register extends Component {
     constructor(props){
@@ -14,14 +14,46 @@ class Register extends Component {
             pass: '',
             user: '',
             error : '',
-            minibio: ''
+            minibio: '',
+            fotoPerfil:''
         }
     }
    componentDidMount() {
     console.log("Mounteo")
     console.log(this.props)
+    auth.onAuthStateChanged((user) => {
+        if (user !== null) {
+            console.log("Este es el email logueado ", auth.currentUser.email)
+            this.props.navigation.navigate('tabnav')
+
+        }
+
+        })
+    
    }
-    OnSubmit (name,email,password,text) {
+   elegirIMG(){
+    ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing:true,
+        aspect:[4,3],
+        quality:1
+      })
+      .then(img => 
+        fetch(img.assets[0].uri)
+        .then(res => res.blob())
+        .then(img =>{
+          const ref = storage.ref(`ProfileImg/${Date.now()}.jpg`)
+          ref.put(img)
+          .then(()=>{
+            ref.getDownloadURL()
+            .then(url =>{
+              this.setState({fotoPerfil: url},()=>console.log(this.state))
+            })
+          })
+        }))  
+    }
+   
+    OnSubmit (name,email,password,text,fotoPerfil) {
         console.log(this.state.user)
         console.log(this.state.pass)
         console.log(this.state.email)
@@ -47,7 +79,8 @@ class Register extends Component {
                 pass: password,
                 nombre: name,
                 minibio: text,
-                createdAt:Date.now()
+                createdAt:Date.now(),
+                fotoPerfil:fotoPerfil
             })
             .then( this.props.navigation.navigate('login'))
             .catch((e) => console.log(e))
@@ -99,8 +132,14 @@ class Register extends Component {
                     })}
                     value = {this.state.minibio}
                     />
+                    <TouchableOpacity
+                    style={styles.img}
+                    onPress={()=> this.elegirIMG()}>
+                        {this.state.fotoPerfil == ``? <Image source={require(`../../assets/fotoDeafult.jpeg`)} style={styles.img} resizeMode='contains' />
+                        : <Image source={{uri:this.state.fotoPerfil}} style={styles.img} resizeMode='contains'/>}
+                    </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.boton} onPress={() => this.OnSubmit(this.state.user,this.state.email,this.state.pass,this.state.minibio)}>
+                    <TouchableOpacity style={styles.boton} onPress={() => this.OnSubmit(this.state.user,this.state.email,this.state.pass,this.state.minibio,this.state.fotoPerfil)}>
                         <Text>Registrarse</Text>
                     </TouchableOpacity>
                     {this.state.error !== '' ?
@@ -162,7 +201,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#28a745',
     borderStyle: 'solid',
-    }
+    },
+    img:{
+        height: 100,
+        width: 100,
+        borderRadius: `50%`
+      }
 })
 
 export default Register

@@ -1,4 +1,4 @@
-import {Text, View , FlatList, TouchableOpacity} from 'react-native'
+import {Text, View , FlatList, TouchableOpacity, Image} from 'react-native'
 import React, {Component} from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import {NavigationContainer} from '@react-navigation/native'
@@ -57,6 +57,10 @@ export default class miPerfil extends Component {
                 {this.state.datosUsuario ? 
                     <View style={styles.perfil}>
                         <Text>{this.state.datosUsuario.mail}</Text>
+                        {this.state.datosUsuario.fotoPerfil==''?<Image style={styles.img} source={{uri:`../../assets/fotoDeafult.jpeg`}} resizeMode='contains' /> :
+                        <Image style={styles.img} source={{uri:this.state.datosUsuario.fotoPerfil}} resizeMode='contains' />
+                        }
+                        
                         <Text>{this.state.datosUsuario.nombre}</Text>
                         <Text>{this.state.datosUsuario.minibio}</Text>
                         <Text>Cantidad de posteos: {this.state.posteos.length}</Text>
@@ -122,5 +126,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#28a745',
     borderStyle: 'solid',
-    }
+    },
+    img:{
+        height: 100,
+        width: 100,
+        borderRadius: `50%`
+      }
 })

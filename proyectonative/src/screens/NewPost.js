@@ -78,78 +78,115 @@ export default class NewPost extends Component {
               })
             }))  
         }
-    render( ) {
-        return (
-            <View style={styles.container}>
-                {this.state.usandoCamara ? (
-                    this.state.imgPostUrl=='' ?
-                    <MyCamara
-                        actualizar={(url) => this.actualizarImgUrl(url)}
-                        onCapture={() => this.setState({ usandoCamara: false })}
-                    />
-                    :
-                    <View>
-                        <TextInput
-                            value={this.state.descripcion}
-                            onChangeText={(text) => this.setState({ descripcion: text })}
-                            placeholder="Descripción"
-                            style={styles.input}
-                        />
-                        <TouchableOpacity onPress={() => this.OnSubmit(this.state.descripcion)}>
-                            <Text>Crear Post</Text>
-                        </TouchableOpacity>
-                    </View>
-                ) : (
-                    this.state.useGaleria==false ? 
-                    <View>
-                    <TouchableOpacity
-                            style={styles.imagePickerButton}
-                            onPress={() => this.elegirCamara()}
-                        >
-                            <Text style={styles.imagePickerText}>Usar cámara</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.imagePickerButton}
-                            onPress={() => this.elegirIMG()}
-                        >
-                            <Text style={styles.imagePickerText}>Elegir desde galería</Text>
-                        </TouchableOpacity>
-                        </View>
-                    :
-                    <View>
-                            <TextInput
-                            value={this.state.descripcion}
-                            onChangeText={(text) => this.setState({ descripcion: text })}
-                            placeholder="Descripción"
-                            style={styles.input}
-                        />
-                        <TouchableOpacity onPress={() => this.OnSubmit(this.state.descripcion)}>
-                            <Text>Crear Post</Text>
-                        </TouchableOpacity>
-                        </View>
-                        
-                        
-                        
-                    
-                )}
-            </View>
-        );
-    }
+        render() {
+            return (
+                <View style={styles.container}>
+                    {this.state.usandoCamara ? (
+                        this.state.imgPostUrl === '' ? (
+                            <MyCamara
+                                actualizar={(url) => this.actualizarImgUrl(url)}
+                                onCapture={() => this.setState({ usandoCamara: false })}
+                            />
+                        ) : (
+                            <View>
+                                <TextInput
+                                    value={this.state.descripcion}
+                                    onChangeText={(text) => this.setState({ descripcion: text })}
+                                    placeholder="Descripción"
+                                    style={styles.input}
+                                />
+                                <TouchableOpacity
+                                    style={styles.createPostButton}
+                                    onPress={() => this.OnSubmit(this.state.descripcion)}
+                                >
+                                    <Text style={styles.createPostText}>Crear Post</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )
+                    ) : (
+                        this.state.useGaleria === false ? (
+                            <View>
+                                <TouchableOpacity
+                                    style={styles.imagePickerButton}
+                                    onPress={() => this.elegirCamara()}
+                                >
+                                    <Text style={styles.imagePickerText}>Usar cámara</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.imagePickerButton}
+                                    onPress={() => this.elegirIMG()}
+                                >
+                                    <Text style={styles.imagePickerText}>Elegir desde galería</Text>
+                                </TouchableOpacity>
+                            </View>
+                        ) : (
+                            <View>
+                                <TextInput
+                                    value={this.state.descripcion}
+                                    onChangeText={(text) => this.setState({ descripcion: text })}
+                                    placeholder="Descripción"
+                                    style={styles.input}
+                                />
+                                <TouchableOpacity
+                                    style={styles.createPostButton}
+                                    onPress={() => this.OnSubmit(this.state.descripcion)}
+                                >
+                                    <Text style={styles.createPostText}>Crear Post</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )
+                    )}
+                </View>
+            );
+        }
+        
 
 }
 
 const styles = StyleSheet.create({
-
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        textAlign: 'center', 
+        backgroundColor: '#ffffff',
+        padding: 20
+    },
+    input: {
+        width: '100%',
         padding: 10,
+        borderWidth: 1,
+        borderColor: '#dcdcdc',
+        borderRadius: 5,
+        marginBottom: 10,
+        backgroundColor: '#f0f0f0'
+    },
+    imagePickerButton: {
+        backgroundColor: '#3897f0',
+        padding: 15,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginBottom: 10,
         width: '100%'
+    },
+    imagePickerText: {
+        color: '#ffffff',
+        fontWeight: 'bold'
+    },
+    createPostButton: {
+        backgroundColor: '#3897f0',
+        padding: 15,
+        borderRadius: 5,
+        alignItems: 'center',
+        width: '100%'
+    },
+    createPostText: {
+        color: '#ffffff',
+        fontWeight: 'bold'
     },
     img: {
         height: 200,
-        width: 20
+        width: '100%',
+        borderRadius: 10,
+        marginBottom: 10
     }
-})
+});

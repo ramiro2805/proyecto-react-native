@@ -33,7 +33,7 @@ export default class Feed extends Component {
     }
     render( ) {
         return(
-            <View>
+            <View style={styles.containerPrincipal}>
                 <Text>Feed</Text>
                 <FlatList
                 data={this.state.posteos}
@@ -44,3 +44,48 @@ export default class Feed extends Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    containerPrincipal: {
+        flex: 1
+    },
+    container1 : {
+        flex: 1,
+        backgroundColor: 'white'
+    },
+    container2 : {
+        flex : 4,
+        backgroundColor : 'white'
+    }, 
+    imgPerrito: {
+        height : 150,
+        width:'100%'
+    },
+    container3 : {
+        flex : 1,
+        backgroundColor : 'grey'
+    },
+    input : {
+        borderColor: 'green',
+        borderWidth: 1,
+        height: 20,
+        paddingHorizontal: 10,
+        paddingVertical: 15,
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: 'red',
+        border: 'solid',
+        marginVertical: 10
+
+    },
+    boton : {
+        backgroundColor: '#28a745',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    alignItems: 'center',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#28a745',
+    borderStyle: 'solid',
+    }
+})

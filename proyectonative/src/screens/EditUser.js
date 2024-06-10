@@ -36,7 +36,7 @@ class EditUser extends Component {
             db.collection("users").doc(this.state.idUsuario).update({minibio: minibio}).then();
         }
         if (pass.length > 5) {
-            updatePassword(auth.currentUser, pass)
+            auth.currentUser.updatePassword(pass)
             .then(() => {
                 console.log('Se actualizó la contraseña');
             }).catch((error) => {

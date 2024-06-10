@@ -32,62 +32,126 @@ class Post extends Component {
         db.collection('posteos').doc(this.props.posteo.id).update({likes:firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)})
         .then(()=> {this.setState({likes:this.props.posteo.data.likes.length , miLike: false})})
     }
-    render( ){
+    IrPerfil(MailUserSeleccionado){
+        {
+            MailUserSeleccionado != auth.currentUser.email ?
+          this.props.navigation.navigate('profileuser', {mail: MailUserSeleccionado})
+          :
+          this.props.navigation.navigate('profile')
+        }
+    }
+    render() {
         return(
             <View style={styles.container}>
-                 <Text>{this.state.datosUsuario.nombre}</Text> 
-                <Image style={styles.img} source={ {uri: this.props.posteo.data.imageUrl}}/>
-                <Text>{this.props.posteo.data.descripcion}</Text>
-                
-                
-                {this.state.miLike ? <TouchableOpacity onPress={() => this.Deslikear()}>
-                <AntDesign name="heart" size={24} color="black" />
-                </TouchableOpacity>:
-                <TouchableOpacity onPress={() => this.Likear()}>
-                <AntDesign name="hearto" size={24} color="black" />
-            </TouchableOpacity>
-                }
-                <Text>Cantidad de likes: {this.state.likes}</Text>
-                <Text>Cantidad de comentarios: {this.props.posteo.data.comments ? this.props.posteo.data.comments.length : 0}</Text>
-                {this.props.posteo.data.comments && this.props.posteo.data.comments.length > 0 ? 
+                <View style={styles.userInfo}>
+                    <TouchableOpacity onPress={() => this.IrPerfil(this.state.datosUsuario.mail)}>
+                        <Text style={styles.userName}>{this.state.datosUsuario.nombre}</Text>
+                    </TouchableOpacity>
+                </View>
+                <Image style={styles.img} source={{ uri: this.props.posteo.data.imageUrl }} />
+                <Text style={styles.postDescription}>{this.props.posteo.data.descripcion}</Text>
+                <View style={styles.likeButton}>
+                    {this.state.miLike ? (
+                        <TouchableOpacity onPress={() => this.Deslikear()}>
+                            <AntDesign name="heart" size={24} color="red" style={styles.likeIcon} />
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity onPress={() => this.Likear()}>
+                            <AntDesign name="hearto" size={24} color="black" style={styles.likeIcon} />
+                        </TouchableOpacity>
+                    )}
+                    <Text style={styles.likeCount}>{this.state.likes} likes</Text>
+                </View>
+                <Text style={styles.commentCount}>{this.props.posteo.data.comments ? this.props.posteo.data.comments.length : 0} comments</Text>
+                {this.props.posteo.data.comments && this.props.posteo.data.comments.length > 0 ? (
                     <FlatList
-                        data={this.props.posteo.data.comments.slice(0,3)}
+                        data={this.props.posteo.data.comments.slice(0, 3)}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => <Text>{item.owner}: {item.descripcion}</Text>}
+                        renderItem={({ item }) => <Text style={styles.comment}>{item.owner}: {item.descripcion}</Text>}
+                        style={styles.commentList}
                     />
-                 : 
-                    <Text>No hay comentarios</Text>
+                ) : (
+                    <Text style={styles.comment}>No comments yet</Text>
+                )}
+                {auth.currentUser.email != null &&
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => { this.props.navigation.navigate('detalleposteo', { id: this.props.posteo.id }) }}
+                    >
+                        <Text style={styles.buttonText}>View all comments</Text>
+                    </TouchableOpacity>
                 }
-                <TouchableOpacity
-        style={styles.button}
-        onPress={() => {this.props.navigation.navigate('detalleposteo',{id : this.props.posteo.id})
-        }}><Text>Ver todos los comentarios</Text></TouchableOpacity>
             </View>
         )
-        
     }
+    
     
 }
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        padding: 10,
+        marginBottom: 10,
+        borderColor: '#dcdcdc',
+        borderWidth: 1,
+        borderRadius: 10,
+        backgroundColor: '#ffffff'
+    },
+    userInfo: {
+        flexDirection: 'row',
         alignItems: 'center',
-        textAlign: 'center', 
-        padding: 10 ,
-        marginBottom: 5,
-        marginTop: 5,
-        borderColor: 'black',
-        borderBlockColor : 'black',
-        backgroundColor: 'gold',
-        border: 100,
-        borderRadius : 10,
-        borderStyle : 'solid'
-        
+        marginBottom: 10
+    },
+    userName: {
+        fontWeight: 'bold',
+        marginLeft: 10,
+        color: '#262626'
     },
     img: {
-        height: 250,
-        width:'100%'
+        height: 300,
+        width: '100%',
+        marginBottom: 10,
+        borderRadius: 10
+    },
+    postDescription: {
+        marginBottom: 10,
+        color: '#262626'
+    },
+    likeButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10
+    },
+    likeIcon: {
+        marginRight: 5
+    },
+    likeCount: {
+        marginLeft: 10,
+        color: '#262626'
+    },
+    commentCount: {
+        marginBottom: 10,
+        color: '#8e8e8e'
+    },
+    commentList: {
+        marginBottom: 10
+    },
+    comment: {
+        color: '#262626'
+    },
+    button: {
+        backgroundColor: '#3897f0',
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginTop: 10
+    },
+    buttonText: {
+        color: '#ffffff',
+        fontWeight: 'bold'
     }
-  });
+});
+
 export default Post

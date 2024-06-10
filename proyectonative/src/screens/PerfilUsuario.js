@@ -6,7 +6,7 @@ import Register from '../screens/Register'
 import {db, auth} from '../firebase/config'
 
 import { StyleSheet } from 'react-native'
-
+import Post from '../Component/Post'
 import Login from '../screens/Login'
 import PostPerfil from '../Component/PostPerfil'
 
@@ -31,7 +31,8 @@ export default class PerfilUsuario extends Component {
                     })
                     
                 })
-                this.setState({posteos:posts})
+                this.setState({posteos:posts}, () => {console.log('Posteos en el state extendido',this.state.posteos)})
+
             }
         )
         db.collection('users').where('mail', '==', this.state.mail)
@@ -45,7 +46,6 @@ export default class PerfilUsuario extends Component {
     
     
     render( ) {
-        console.log(this.state.posteos)
         return(
             <View style={styles.containerPrincipal}>
                 
@@ -60,12 +60,6 @@ export default class PerfilUsuario extends Component {
                         <Text>{this.state.datosUsuario.nombre}</Text>
                         <Text>{this.state.datosUsuario.minibio}</Text>
                         <Text>Cantidad de posteos: {this.state.posteos.length}</Text>
-                        <TouchableOpacity style={styles.button} onPress={()=> this.props.navigation.navigate("EditUser")}>
-                            <Text style={styles.buttonText}>Edit</Text>
-                            </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.logout()}>
-                            <Text>Logout</Text>
-                        </TouchableOpacity>
                     </View>
                  : 
                     <Text>Cargando información del usuario...</Text>
@@ -73,7 +67,7 @@ export default class PerfilUsuario extends Component {
                 <FlatList
                 data={this.state.posteos}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({item}) => <View><PostPerfil borrarPosteo={(idPosteo) => this.borrarPosteo(idPosteo)} posteo={item}/></View>}
+                renderItem={({item}) => <View><Post  navigation = {this.props.navigation} posteo={item}/></View>}
                 />
 
                 

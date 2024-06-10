@@ -46,87 +46,143 @@ class DetallePosteo extends Component {
         .then(()=> {this.setState({likes:this.state.post.likes.length, miLike: false})})
     }
     onSubmit(comentario){
-        db.collection('posteos').doc(this.state.id).update({
-            comments: firebase.firestore.FieldValue.arrayUnion({
-                    owner: auth.currentUser.email,
-                    descripcion : comentario,
-                    createdAt : Date.now()
-            })
-        }).then(res => console.log(res))
-        .catch((e)=>console.log(e))
+        if (comentario != ''){
+            db.collection('posteos').doc(this.state.id).update({
+                comments: firebase.firestore.FieldValue.arrayUnion({
+                        owner: auth.currentUser.email,
+                        descripcion : comentario,
+                        createdAt : Date.now()
+                })
+            }).then(res => console.log(res))
+            .catch((e)=>console.log(e))
+        }
+        else {
+            alert('no podes comentar algo vacio')
+        }
+       
     }
-    render( ){
-        return(
+    render() {
+        return (
             this.state.post == null ? <Text> Cargando </Text> :
             <View style={styles.container}>
-                 <Text>{this.state.datosUsuario.nombre}</Text> 
-                <Image style={styles.img} source={ {uri: this.state.post.imageUrl}}/>
-                <Text>{this.state.post.descripcion}</Text>
+                <Text style={styles.userName}>{this.state.datosUsuario.nombre}</Text>
+                <Image style={styles.img} source={{ uri: this.state.post.imageUrl }} />
+                <Text style={styles.postDescription}>{this.state.post.descripcion}</Text>
                 
-                {this.state.miLike ? <TouchableOpacity onPress={() => this.Deslikear()}>
-                <AntDesign name="heart" size={24} color="black" />
-                </TouchableOpacity>:
-                <TouchableOpacity onPress={() => this.Likear()}>
-                <AntDesign name="hearto" size={24} color="black" />
-            </TouchableOpacity>
-                }
-                <Text>Cantidad de likes: {this.state.likes}</Text>
+                <View style={styles.likeButton}>
+                    {this.state.miLike ? (
+                        <TouchableOpacity onPress={() => this.Deslikear()}>
+                            <AntDesign name="heart" size={24} color="red" style={styles.likeIcon} />
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity onPress={() => this.Likear()}>
+                            <AntDesign name="hearto" size={24} color="black" style={styles.likeIcon} />
+                        </TouchableOpacity>
+                    )}
+                    <Text style={styles.likeCount}>{this.state.likes} likes</Text>
+                </View>
+    
                 <TextInput 
-                placeholder = 'Comentario'
-                onChangeText = {(text)=>this.setState({
-                    comentario:text
-                })}
-                value = {this.state.comentario}
-                style = {styles.input}
-                >
-                </TextInput>
-
+                    placeholder='Comentario'
+                    onChangeText={(text) => this.setState({ comentario: text })}
+                    value={this.state.comentario}
+                    style={styles.commentInput}
+                />
+    
                 <TouchableOpacity
-                    style = {styles.button}
-                    onPress = {(comentario)=> this.state.comentario ==  null ? alert('No puedes comentar un texto vacio') : this.onSubmit(this.state.comentario)}
-                    >
-                <Text
-                style = {styles.buttonText}
-                >Enviar!
-                </Text>
-            </TouchableOpacity>
-            { this.state.post !== null && this.state.post.comments.length !== 0? 
-            <FlatList 
-            style={styles.flatlist}
-            data={this.state.post.comments}
-            keyExtractor={item => item.createdAt.toString()}
-            renderItem={({item}) => <Text>{item.descripcion}</Text>}
-            />
-        
-            
-            :<Text>Todavia no hay comentarios</Text>     
-            }
+                    style={styles.button}
+                    onPress={() => this.state.comentario === '' ? alert('No puedes comentar un texto vacío') : this.onSubmit(this.state.comentario)}
+                >
+                    <Text style={styles.buttonText}>Enviar!</Text>
+                </TouchableOpacity>
+    
+                {this.state.post !== null && this.state.post.comments.length !== 0 ? (
+                    <FlatList 
+                        style={styles.flatlist}
+                        data={this.state.post.comments}
+                        keyExtractor={item => item.createdAt.toString()}
+                        renderItem={({ item }) => <Text style={styles.comment}>{item.descripcion}</Text>}
+                    />
+                ) : (
+                    <Text style={styles.noCommentsText}>Todavía no hay comentarios</Text>
+                )}
             </View>
-        )
-        
+        );
     }
+    
     
 }
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        backgroundColor: '#ffffff',
+        padding: 10
+    },
+    userInfo: {
+        flexDirection: 'row',
         alignItems: 'center',
-        textAlign: 'center', 
-        padding: 10 ,
-        marginBottom: 5,
-        marginTop: 5,
-        borderColor: 'black',
-        borderBlockColor : 'black',
-        backgroundColor: 'gold',
-        border: 100,
-        borderRadius : 10,
-        borderStyle : 'solid'
-        
+        marginBottom: 10
+    },
+    userName: {
+        fontWeight: 'bold',
+        color: '#262626',
+        marginBottom: 10
     },
     img: {
         height: 500,
-        width:'100%'
+        width: '100%',
+        borderRadius: 10,
+        marginBottom: 10
+    },
+    postDescription: {
+        color: '#262626',
+        marginBottom: 10
+    },
+    likeButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10
+    },
+    likeIcon: {
+        marginRight: 5
+    },
+    likeCount: {
+        color: '#262626',
+        marginLeft: 10,
+        marginBottom: 10
+    },
+    commentInput: {
+        borderWidth: 1,
+        borderColor: '#dcdcdc',
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 10,
+        width: '100%',
+        backgroundColor: '#f0f0f0'
+    },
+    button: {
+        backgroundColor: '#3897f0',
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 10
+    },
+    buttonText: {
+        color: '#ffffff',
+        fontWeight: 'bold'
+    },
+    flatlist: {
+        width: '100%'
+    },
+    comment: {
+        color: '#262626',
+        marginBottom: 5
+    },
+    noCommentsText: {
+        color: '#8e8e8e',
+        marginTop: 10
     }
-  });
+});
+
 export default DetallePosteo

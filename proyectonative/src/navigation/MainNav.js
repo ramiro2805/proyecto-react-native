@@ -19,8 +19,8 @@ export default class MainNav extends Component {
                     <Stack.Screen name='login' component= {Login} options = {{ headerShown: false}}/>
                     <Stack.Screen name='tabnav' component={TabNav}  options={{headerShown : false}}/>
                     <Stack.Screen name = 'EditUser' component = {EditUser}  options={{headerShown : false}}/>
-                    <Stack.Screen name = 'detalleposteo' component = {DetallePosteo} options={{headerShown : false}} />
-                    <Stack.Screen name = 'profileuser' component = {PerfilUsuario} options={{headerShown : false}} />
+                    
+                    
                 </Stack.Navigator>
             </NavigationContainer>
         )

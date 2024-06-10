@@ -7,6 +7,7 @@ import Login from '../screens/Login'
 import TabNav from './TabNav'
 import EditUser from '../screens/EditUser'
 import DetallePosteo from '../screens/DetallePosteo'
+import PerfilUsuario from '../screens/PerfilUsuario'
 export default class MainNav extends Component {
 
 
@@ -19,6 +20,7 @@ export default class MainNav extends Component {
                     <Stack.Screen name='tabnav' component={TabNav}  options={{headerShown : false}}/>
                     <Stack.Screen name = 'EditUser' component = {EditUser}  options={{headerShown : false}}/>
                     <Stack.Screen name = 'detalleposteo' component = {DetallePosteo} options={{headerShown : false}} />
+                    <Stack.Screen name = 'profileuser' component = {PerfilUsuario} options={{headerShown : false}} />
                 </Stack.Navigator>
             </NavigationContainer>
         )

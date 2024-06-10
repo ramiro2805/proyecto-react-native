@@ -32,14 +32,15 @@ class Buscador extends Component {
   }
 
 
-  seleccionarUsuario(IdUserSeleccionado) {
+  seleccionarUsuario(MailUserSeleccionado) {
+
     {
-        IdUserSeleccionado != auth.currentUser.email ?
-      this.props.navigation.navigate('profileuser', IdUserSeleccionado)
+        MailUserSeleccionado != auth.currentUser.email ?
+      this.props.navigation.navigate('profileuser', {mail: MailUserSeleccionado})
       :
       this.props.navigation.navigate('profile')
     }
-    console.log(IdUserSeleccionado);
+    
   }
 
   render() {

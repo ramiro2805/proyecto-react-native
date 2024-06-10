@@ -35,9 +35,9 @@ class Buscador extends Component {
   seleccionarUsuario(IdUserSeleccionado) {
     {
         IdUserSeleccionado != auth.currentUser.email ?
-      this.props.navigation.navigate('Profile', IdUserSeleccionado)
+      this.props.navigation.navigate('profileuser', IdUserSeleccionado)
       :
-      this.props.navigation.navigate('MyProfile', IdUserSeleccionado)
+      this.props.navigation.navigate('profile')
     }
     console.log(IdUserSeleccionado);
   }

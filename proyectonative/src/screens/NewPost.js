@@ -21,6 +21,17 @@ export default class NewPost extends Component {
             useGaleria: false
         }
     }
+    componentDidMount() {
+        auth.onAuthStateChanged((user) => {
+            if (user == null) {
+                console.log("no hay nadie logueado ")
+                this.props.navigation.navigate('login')
+    
+            }
+    
+            })
+
+    }
     actualizarImgUrl (url) {
         this.setState({imgPostUrl : url})
     }

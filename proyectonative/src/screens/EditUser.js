@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { getAuth, updatePassword } from 'firebase/auth';
-import { Text, View, TouchableOpacity, TextInput } from 'react-native';
+import { Text, View, TouchableOpacity, TextInput, Image } from 'react-native';
 import { db, auth } from '../firebase/config'
-
-
+import * as ImagePicker from 'expo-image-picker'
+import { storage } from "../firebase/config";
 
 
 class EditUser extends Component {
@@ -14,7 +14,8 @@ class EditUser extends Component {
             pass: "",
             minibio: "",
             datosUsuario: {},
-            idUsuario: null
+            idUsuario: null,
+            fotoPerfil:""
         };
     }
 
@@ -43,13 +44,42 @@ class EditUser extends Component {
                 console.log(error);
             });
         }
+        if(this.state.fotoPerfil != ""){
+            db.collection("users").doc(this.state.idUsuario).update({fotoPerfil:this.state.fotoPerfil}).then(()=> alert("Foto de perfil actualizada"))
+          }
         this.props.navigation.navigate('profile')
         
     }
-
+    elegirIMG(){
+        ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing:true,
+            aspect:[4,3],
+            quality:1
+          })
+          .then(img => 
+            fetch(img.assets[0].uri)
+            .then(res => res.blob())
+            .then(img =>{
+              const ref = storage.ref(`ProfileImg/${Date.now()}.jpg`)
+              ref.put(img)
+              .then(()=>{
+                ref.getDownloadURL()
+                .then(url =>{
+                  this.setState({fotoPerfil: url},()=>console.log(this.state))
+                })
+              })
+            }))  
+        }
     render() {
         return ( 
             <View>
+                <TouchableOpacity
+                    style={styles.img}
+                    onPress={()=> this.elegirIMG()}>
+                        {this.state.fotoPerfil == "" ? <Image source={require(`../../assets/fotoDeafult.jpeg`)} style={styles.img} resizeMode='contains' />
+                            : <Image source={{uri:this.state.fotoPerfil}} style={styles.img} resizeMode='contains'/>}
+                    </TouchableOpacity>
                 <TextInput 
                     style={styles.input}
                     placeholder={this.state.datosUsuario.nombre || 'Nombre'}
@@ -95,7 +125,12 @@ const styles = {
         borderRadius: 4,
         borderWidth: 1,
         borderColor: '#28a745'
-    }
+    },
+    img:{
+        height: 100,
+        width: 100,
+        borderRadius: `50%`
+      }
 };
 
 export default EditUser;

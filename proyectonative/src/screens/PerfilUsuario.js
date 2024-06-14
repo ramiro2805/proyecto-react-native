@@ -63,7 +63,7 @@ export default class PerfilUsuario extends Component {
                 {this.state.posteos.length == 0 ?
                 <Text>Este usuario  no tiene ningun posteo</Text> :
                 <FlatList
-                    data={this.state.posteos}
+                    data={ this.state.posteos}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => <View><Post navigation={this.props.navigation} posteo={item} /></View>}
                 />

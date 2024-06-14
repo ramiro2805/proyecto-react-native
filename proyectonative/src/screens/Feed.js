@@ -19,6 +19,14 @@ export default class Feed extends Component {
         }
     }
     componentDidMount() {
+        auth.onAuthStateChanged((user) => {
+            if (user == null) {
+                console.log("no hay nadie logueado ")
+                this.props.navigation.navigate('login')
+    
+            }
+    
+            })
         db.collection('posteos').orderBy('createdAt','desc').onSnapshot((docs) => {
             let postObtenidos = []
             docs.forEach(doc => {

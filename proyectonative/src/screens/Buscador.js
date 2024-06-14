@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { TextInput, View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from "react-native";
-
 import { auth, db } from "../firebase/config";
 
 class Buscador extends Component {
@@ -11,9 +10,9 @@ class Buscador extends Component {
       busqueda: "",
       resultados: [],
       IdUserSeleccionado: "",
+      filtro: "email", // Estado para almacenar el filtro seleccionado
     };
   }
-
 
   componentDidMount() {
     db.collection("users").onSnapshot((snapshot) => {
@@ -31,66 +30,91 @@ class Buscador extends Component {
     });
   }
 
-
   seleccionarUsuario(MailUserSeleccionado) {
-
-    {
-        MailUserSeleccionado != auth.currentUser.email ?
-      this.props.navigation.navigate('profileuser', {mail: MailUserSeleccionado})
-      :
-      this.props.navigation.navigate('profile')
+    if (MailUserSeleccionado != auth.currentUser.email) {
+      this.props.navigation.navigate('profileuser', { mail: MailUserSeleccionado });
+    } else {
+      this.props.navigation.navigate('profile');
     }
-    
+  }
+
+  filtrarUsuarios() {
+    const { busqueda, resultados, filtro } = this.state;
+    return resultados.filter((usuario) => {
+      if (filtro === "email") {
+        return usuario.datos.mail.toLowerCase().includes(busqueda.toLowerCase());
+      } else if (filtro === "username") {
+        return usuario.datos.nombre.toLowerCase().includes(busqueda.toLowerCase());
+      } else {
+        return usuario.datos.mail.toLowerCase().includes(busqueda.toLowerCase()) ||
+               usuario.datos.nombre.toLowerCase().includes(busqueda.toLowerCase());
+      }
+    });
   }
 
   render() {
-    const resultadosFiltrados = this.state.resultados.filter((usuario) =>
-      usuario.datos.mail.toLowerCase().includes(this.state.busqueda.toLowerCase())
-    );
-
+    const resultadosFiltrados = this.filtrarUsuarios();
 
     return (
-      <View >
+      <View>
+        <View style={styles.filterContainer}>
+          <TouchableOpacity onPress={() => this.setState({ filtro: "email" })}>
+            <Text style={{ color: this.state.filtro === "email" ? "blue" : "grey" }}>Filtrar por Email</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.setState({ filtro: "username" })}>
+            <Text style={{ color: this.state.filtro === "username" ? "blue" : "grey" }}>Filtrar por Nombre</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.setState({ filtro: "both" })}>
+            <Text style={{ color: this.state.filtro === "both" ? "blue" : "grey" }}>Filtrar por Ambos</Text>
+          </TouchableOpacity>
+        </View>
         <TextInput
-          placeholder="Search by mail ..."
+          placeholder="Search..."
           keyboardType="default"
           value={this.state.busqueda}
           style={styles.input}
           onChangeText={(text) => this.setState({ busqueda: text })}
         />
-
-        <FlatList
-          data={resultadosFiltrados}
-          keyExtractor={(user) => user.id}
-          style={styles.container}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => this.seleccionarUsuario(item.datos.mail)}
-              style={styles.containerProfile}>
-              {item.datos.fotoPerfil != '' ?
-                <Image
-                  style={styles.profilePic}
-                  source={{ uri: item.datos.fotoPerfil }}
-                  resizeMode='contain' /> :
-                <Image
-                  style={styles.profilePic}
-                  source={require('../../assets/fotoDeafult.jpeg')}
-                  resizeMode='contain' />}
-              <View>
-                <Text >{item.datos.nombre}</Text>
-                <Text style={styles.email}>{item.datos.mail}</Text>
-
-              </View>
-            </TouchableOpacity>
-          )}
-        />
+        {resultadosFiltrados.length === 0 ? (
+          <Text>No hay resultados para su búsqueda</Text>
+        ) : (
+          <FlatList
+            data={resultadosFiltrados}
+            keyExtractor={(user) => user.id}
+            style={styles.container}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => this.seleccionarUsuario(item.datos.mail)}
+                style={styles.containerProfile}
+              >
+                {item.datos.fotoPerfil !== '' ? (
+                  <Image
+                    style={styles.profilePic}
+                    source={{ uri: item.datos.fotoPerfil }}
+                    resizeMode="contain"
+                  />
+                ) : (
+                  <Image
+                    style={styles.profilePic}
+                    source={require('../../assets/fotoDeafult.jpeg')}
+                    resizeMode="contain"
+                  />
+                )}
+                <View>
+                  <Text>{item.datos.nombre}</Text>
+                  <Text style={styles.email}>{item.datos.mail}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        )}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: { marginLeft: 10, },
+  container: { marginLeft: 10 },
   email: { color: 'grey' },
   containerProfile: {
     flexDirection: 'row',
@@ -110,6 +134,11 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderColor: 'white',
     marginRight: 10
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    margin: 10,
   },
 });
 

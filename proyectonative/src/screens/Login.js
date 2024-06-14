@@ -40,7 +40,7 @@ OnSubmit (email,password) {
                 return false
             }
             if(password===null|| password ===''|| password.length < 6) {
-                this.setState({error:'La password dno puede tener menos de 6 caracteres'})
+                this.setState({error:'La password no puede tener menos de 6 caracteres'})
                 return false
             }
     
@@ -51,9 +51,16 @@ OnSubmit (email,password) {
             }}
         
         )
-            .catch((e) => {
-                if ( e.code=== "auth/internal-error") {
-                this.setState({error: 'Contrasena incorrecta'})
+        .catch((e) => {
+            console.log(e)
+            if (e.code === "auth/internal-error") {
+                this.setState({error: 'el usuario o pass no son correctos'})
+                console.log(this.state.error)
+                alert(`ekl usuario o pass no son correctos`)
+            }  else {
+                this.setState({error: e.message})
+                console.log(this.state.error)
+                
             }
         })
             

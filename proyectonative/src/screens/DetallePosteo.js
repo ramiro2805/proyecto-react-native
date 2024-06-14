@@ -105,7 +105,7 @@ class DetallePosteo extends Component {
                     {this.state.post !== null && this.state.post.comments.length !== 0 ? (
                         <FlatList
                             style={styles.flatlist}
-                            data={this.state.post.comments}
+                            data={ this.state.post.comments.sort((a,b) => b.createdAt - a.createdAt )}
                             keyExtractor={item => item.createdAt.toString()}
                             renderItem={({ item }) => <Text style={styles.comment}>{item.descripcion}</Text>}
                         />

@@ -9,7 +9,8 @@ export default class miPerfil extends Component {
         super(props)
         this.state = {
             posteos: [],
-            datosUsuario: null
+            datosUsuario: null,
+            idUsuario: null
         }
     }
 
@@ -29,7 +30,7 @@ export default class miPerfil extends Component {
         db.collection('users').where('mail', '==', auth.currentUser.email)
             .onSnapshot(data => {
                 data.forEach(doc => {
-                    this.setState({datosUsuario: doc.data()})
+                    this.setState({datosUsuario: doc.data(), idUsuario: doc.id })
                 });
             })
     }
@@ -43,6 +44,26 @@ export default class miPerfil extends Component {
         db.collection('posteos').doc(idPosteo).delete()
             .then((res) => console.log(res))
             .catch(e => console.log(e))
+    }
+    borrarUser(id){
+        db.collection('users').doc(id).delete()
+        .then(() =>{
+            auth.currentUser.delete()
+            .then(() => {
+                auth.signOut()
+                .then(() => {
+                    console.log('Usuario borrado y deslogueado correctamente');
+                    this.props.navigation.navigate('login');
+                })
+                .catch((error) => {
+                    console.error('Error al desloguear:', error);
+                    // Manejar errores de deslogueo según sea necesario
+                });
+                
+            })
+            .catch((e) => console.log(e))
+        })
+        .catch((e) => console.log('error en el documento:' + e))
     }
 
     render() {
@@ -62,9 +83,17 @@ export default class miPerfil extends Component {
                         <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
                             <Text style={styles.logoutButtonText}>Logout</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity style={styles.logoutButton} onPress={() => this.borrarUser(this.state.idUsuario)}>
+                            <Text style={styles.logoutButtonText}>Borrar Perfil</Text>
+                        </TouchableOpacity>
                     </View>
                     : 
-                    <Text>Cargando información del usuario...</Text>
+                    // <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
+                    //         <Text style={styles.logoutButtonText}>Logout</Text>
+                    //     </TouchableOpacity>
+                     <Text>Cargando información del usuario...</Text>
+                    
+
                 }
                 <FlatList
                     data={this.state.posteos}
